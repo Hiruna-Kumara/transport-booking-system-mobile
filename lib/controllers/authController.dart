@@ -8,15 +8,21 @@ class AuthController {
   String responseBody;
   String email;
   Future<http.Response> makeGetRequest(NewUserModel newUserModel) async {
-    this.email=newUserModel.email;
+    this.email = newUserModel.email;
     var url = Constants.SERVER + '/signup';
-
+    String phoneNumberValidate = newUserModel.phoneNumber.toString();
+    String phoneNumberSend;
+    if (phoneNumberValidate.length == 10) {
+      phoneNumberSend = "+94" + phoneNumberValidate.substring(1);
+    }else{
+      phoneNumberSend="";
+    }
     var body = json.encode({
       "firstName": newUserModel.firstName,
       "secondName": newUserModel.secondName,
       "email": newUserModel.email,
       "password": newUserModel.password,
-      "phoneNumber": newUserModel.phoneNumber,
+      "phoneNumber": phoneNumberSend,
       "role": newUserModel.role
     });
 
@@ -32,7 +38,6 @@ class AuthController {
     );
 
     final responseJson = json.decode(response.body);
-    print(responseJson);
     this.responseBody = responseJson.toString();
     // if(responseBody=="{Email has been sent to "+newUserModel.email+"}"){
 
@@ -43,7 +48,8 @@ class AuthController {
 
     // serverResponse = response.body;
     // this.oldResponse=response;
-    print (response.toString()+"ok");
+    print(responseJson);
+    print(response.toString() + "ok");
     return response;
   }
 

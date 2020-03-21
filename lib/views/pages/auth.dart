@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: "Phone Number",
+                        labelText: "Phone Number  Ex:07xxxxxxxx",
                         hasFloatingPlaceholder: true),
                     controller: phoneNumberInp,
                   ),
@@ -268,18 +268,42 @@ class _LoginPageState extends State<LoginPage> {
                                 "{message: Email has been sent to " +
                                     authController.email +
                                     "}") {
+                              showAlertDialog(
+                                  context,
+                                  "Verification email has been send",
+                                  "Success");
+                              clearTextBoxes();
                               setState(() {
                                 _authMode = AuthMode.LOGIN;
                               });
                             } else if ((serverResponse ==
-                                    "{error: First name is required}") ||
-                                (serverResponse ==
-                                    "{error: First name is required}")) {
-                              serverResponse = "error";
-
-                              showAlertDialog(context);
+                                "{error: Must be a valid email address}")) {
+                              serverResponse = "email error";
+                              showAlertDialog(
+                                  context,
+                                  "Please enter a valid email address",
+                                  "Alert");
+                            } else if ((serverResponse ==
+                                "{error: Must be a valid phone number}")) {
+                              serverResponse = "phone num error";
+                              showAlertDialog(
+                                  context,
+                                  "Please enter a valid phone number",
+                                  "Alert");
+                            }else if ((serverResponse ==
+                                "{error: Password must be at least 6 characters long}")) {
+                              serverResponse = "password error";
+                              showAlertDialog(
+                                  context,
+                                  "Password must be at least 6 characters long",
+                                  "Alert");
+                            } else {
+                              serverResponse = "other error";
+                              showAlertDialog(
+                                  context, "Please fill the form", "Alert");
                             }
                           });
+                          
                           // if (authController.getResponse() == null) {
                           //   serverResponse = 'null2';
                           // } else {
@@ -340,17 +364,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(
+      BuildContext context, String toDisplay, String titleToDisplay) {
     // set up the button
-    Widget okButton = FlatButton(
-        child: Text("OK"),
-        onPressed: ()=> Navigator.pop(context) 
-        );
+    Widget okButton =
+        FlatButton(child: Text("OK"), onPressed: () => Navigator.pop(context));
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Alert"),
-      content: Text("Please fill the form"),
+      title: Text(titleToDisplay),
+      content: Text(toDisplay),
       actions: [
         okButton,
       ],
@@ -363,6 +386,16 @@ class _LoginPageState extends State<LoginPage> {
         return alert;
       },
     );
+  }
+
+// Below commenting has been done for developing purposes
+  void clearTextBoxes() {
+    firstNameInp.clear();
+    secondNameInp.clear();
+    emailInp.clear();
+    phoneNumberInp.clear();
+    passwordInp.clear();
+
   }
 }
 
