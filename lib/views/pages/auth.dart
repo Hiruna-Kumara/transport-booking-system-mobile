@@ -1,8 +1,9 @@
+import 'package:http/http.dart';
+
 import '../widgets/page_widget.dart';
 import '../../models/newUser.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/authController.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override
@@ -20,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   String serverResponse = "Done!";
   AuthMode _authMode = AuthMode.LOGIN;
   AuthController authController = new AuthController();
+  String oldResponse;
+  Future<Response> responseNew;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +43,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 
   Widget loginCard(BuildContext context) {
     return Column(
@@ -139,7 +140,6 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
-
 
   final firstNameInp = TextEditingController();
   final secondNameInp = TextEditingController();
@@ -251,9 +251,44 @@ class _LoginPageState extends State<LoginPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5)),
                         onPressed: () {
-                          newUserModel = new NewUserModel(email: emailInp.text, password: passwordInp.text, firstName: firstNameInp.text, secondName: secondNameInp.text, phoneNumber: phoneNumberInp.text);
+                          newUserModel = new NewUserModel(
+                              email: emailInp.text,
+                              password: passwordInp.text,
+                              firstName: firstNameInp.text,
+                              secondName: secondNameInp.text,
+                              phoneNumber: phoneNumberInp.text);
                           // _makeGetRequest();
-                          authController.makeGetRequest(newUserModel);
+                          // responseNew= authController.makeGetRequest(newUserModel);
+                          authController
+                              .makeGetRequest(newUserModel)
+                              .then((value) {
+                            serverResponse = authController.getResponse();
+                            print(serverResponse);
+                            if (serverResponse ==
+                                "{message: Email has been sent to " +
+                                    authController.email +
+                                    "}") {
+                              setState(() {
+                                _authMode = AuthMode.LOGIN;
+                              });
+                            } else if ((serverResponse ==
+                                    "{error: First name is required}") ||
+                                (serverResponse ==
+                                    "{error: First name is required}")) {
+                              serverResponse = "error";
+
+                              showAlertDialog(context);
+                            }
+                          });
+                          // if (authController.getResponse() == null) {
+                          //   serverResponse = 'null2';
+                          // } else {
+                          //   serverResponse = (responseNew) as String;
+                          // }
+                          // oldResponse=authController.getResponse();
+                          // serverResponse=oldResponse;
+
+                          //test
                         },
                       ),
                     ],
@@ -305,4 +340,46 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+        child: Text("OK"),
+        onPressed: ()=> Navigator.pop(context) 
+        );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Alert"),
+      content: Text("Please fill the form"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
+
+// flutter textfield validation
+
+// TextFormField(
+//   // The validator receives the text that the user has entered.
+//   validator: (value) {
+//     if (value.isEmpty) {
+//       return 'Please enter some text';
+//     }
+//     return null;
+//   },
+// );
+
+// flutter operators
+
+// && AND
+// || OR
+// ! NOT
