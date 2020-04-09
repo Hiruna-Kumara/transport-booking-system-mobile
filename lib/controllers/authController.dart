@@ -1,3 +1,5 @@
+import 'package:http/http.dart';
+
 import '../constants.dart';
 import '../models/newUser.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +8,7 @@ import 'dart:convert';
 
 class AuthController {
   String responseBody;
+  String responseBodySignIn;
   String email;
   Future<http.Response> makeGetRequest(NewUserModel newUserModel) async {
     this.email = newUserModel.email;
@@ -57,6 +60,29 @@ class AuthController {
     return responseBody;
   }
 
+  String message;
+
+  Future<String> signInUser(String email, String password) async  {
+    String url = Constants.SERVER;
+
+    Response response = await post(
+      '$url/signin',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password
+      }),
+    );
+    Map data = jsonDecode(response.body);
+    message = data['message'];  
+    responseBodySignIn=message; 
+    return message;
+  }
+  String getResponseSignIn() {
+    return responseBodySignIn;
+  }
   // Future<String> makeGetRequest2(NewUserModel newUserModel) async {
   //   var url = Constants.SERVER + '/signup';
 

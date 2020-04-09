@@ -10,12 +10,13 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-enum AuthMode { LOGIN, SIGNUP }
+enum AuthMode { LOGIN, SIGNUP ,PassengerUI}
 
 class _LoginPageState extends State<LoginPage> {
   // To adjust the layout according to the screen size
   // so that our layout remains responsive ,we need to
   // calculate the screen height
+  final _formKey = GlobalKey<FormState>();
   NewUserModel newUserModel;
   double screenHeight;
   String serverResponse = "Done!";
@@ -23,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
   AuthController authController = new AuthController();
   String oldResponse;
   Future<Response> responseNew;
+  String email = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -57,60 +60,142 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 8,
             child: Padding(
               padding: const EdgeInsets.all(30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: "Your Email", hasFloatingPlaceholder: true),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: "Password", hasFloatingPlaceholder: true),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      MaterialButton(
-                        onPressed: () {},
-                        child: Text("Forgot Password ?"),
-                      ),
-                      Expanded(
-                        child: Container(),
-                      ),
-                      FlatButton(
-                        child: Text("Login"),
-                        color: Color(0xFF4B9DFE),
-                        textColor: Colors.white,
-                        padding: EdgeInsets.only(
-                            left: 38, right: 38, top: 15, bottom: 15),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        onPressed: () {},
-                      )
-                    ],
-                  )
-                ],
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "Your Email",
+                          hasFloatingPlaceholder: true),
+                      validator: (val) =>
+                          val.isEmpty ? 'Enter your email' : null,
+                      onChanged: (val) {
+                        setState(() => email = val);
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "Password", hasFloatingPlaceholder: true),
+                      validator: (val) => val.length < 6
+                          ? 'Enter a password 6+ chars long'
+                          : null,
+                      onChanged: (val) {
+                        setState(() => password = val);
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        MaterialButton(
+                          onPressed: () {},
+                          child: Text("Forgot Password ?"),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        // FlatButton(
+                        //   child: Text("Login"),
+                        //   color: Color(0xFF4B9DFE),
+                        //   textColor: Colors.white,
+                        //   padding: EdgeInsets.only(
+                        //       left: 38, right: 38, top: 15, bottom: 15),
+                        //   shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(5)),
+                        //   onPressed: () {},
+                        // )
+                        FlatButton(
+                          child: Text("Login"),
+                          color: Color(0xFF4B9DFE),
+                          textColor: Colors.white,
+                          padding: EdgeInsets.only(
+                              left: 38, right: 38, top: 15, bottom: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          onPressed: () {
+                            // async {
+                            //   if (_formKey.currentState.validate()) {
+                            //     await authController.signInUser(email,password);
+                            //     String message = authController.message;
+                            //     print(message);
+                            //     if (message == 'Sign in success'){
+                            //       print (authController.message);
+                            //     } else {
+                            //       print ('could not log in');
+                            //     }
+                            //   }
+                            if (_formKey.currentState.validate()) {
+                              authController
+                                  .signInUser(email, password)
+                                  .then((value) {
+                                serverResponse =
+                                    authController.getResponseSignIn();
+                                print(serverResponse + "signIn");
+                                if (serverResponse == "Sign in success") {
+                                  setState(() {
+                                _authMode = AuthMode.PassengerUI;
+                              });
+                                  showAlertDialog(
+                                      context, "You are logged in", "success");
+                                  // clearTextBoxes();
+                                  // setState(() {
+                                  //   _authMode = AuthMode.LOGIN;
+                                  // });
+                                  // } else if ((serverResponse ==
+                                  //     "{error: Must be a valid email address}")) {
+                                  //   serverResponse = "email error";
+                                  //   showAlertDialog(
+                                  //       context,
+                                  //       "Please enter a valid email address",
+                                  //       "Alert");
+                                  // } else if ((serverResponse ==
+                                  //     "{error: Must be a valid phone number}")) {
+                                  //   serverResponse = "phone num error";
+                                  //   showAlertDialog(
+                                  //       context,
+                                  //       "Please enter a valid phone number",
+                                  //       "Alert");
+                                  // }else if ((serverResponse ==
+                                  //     "{error: Password must be at least 6 characters long}")) {
+                                  //   serverResponse = "password error";
+                                  //   showAlertDialog(
+                                  //       context,
+                                  //       "Password must be at least 6 characters long",
+                                  //       "Alert");
+                                } else {
+                                  serverResponse = "other error";
+                                  showAlertDialog(
+                                      context, "Login Error", "Alert");
+                                }
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -263,7 +348,7 @@ class _LoginPageState extends State<LoginPage> {
                               .makeGetRequest(newUserModel)
                               .then((value) {
                             serverResponse = authController.getResponse();
-                            print(serverResponse);
+                            print(serverResponse + "12");
                             if (serverResponse ==
                                 "{message: Email has been sent to " +
                                     authController.email +
@@ -286,11 +371,9 @@ class _LoginPageState extends State<LoginPage> {
                             } else if ((serverResponse ==
                                 "{error: Must be a valid phone number}")) {
                               serverResponse = "phone num error";
-                              showAlertDialog(
-                                  context,
-                                  "Please enter a valid phone number",
-                                  "Alert");
-                            }else if ((serverResponse ==
+                              showAlertDialog(context,
+                                  "Please enter a valid phone number", "Alert");
+                            } else if ((serverResponse ==
                                 "{error: Password must be at least 6 characters long}")) {
                               serverResponse = "password error";
                               showAlertDialog(
@@ -303,7 +386,7 @@ class _LoginPageState extends State<LoginPage> {
                                   context, "Please fill the form", "Alert");
                             }
                           });
-                          
+
                           // if (authController.getResponse() == null) {
                           //   serverResponse = 'null2';
                           // } else {
@@ -395,7 +478,6 @@ class _LoginPageState extends State<LoginPage> {
     emailInp.clear();
     phoneNumberInp.clear();
     passwordInp.clear();
-
   }
 }
 
