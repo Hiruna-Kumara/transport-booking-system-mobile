@@ -93,6 +93,10 @@ class AuthController {
   String getUID(){
     return uid;
   }
+
+  getBusDetails(String uid) {
+    
+  }
   // Future<APIResponse<UserData>> signInUser(String email, String password) async {
   //   // sign in the conductor when the email and password is given
   //   String url = Constants.SERVER;

@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 20,
                     ),
                     TextFormField(
+                      obscureText:true,
                       decoration: InputDecoration(
                           labelText: "Password", hasFloatingPlaceholder: true),
                       validator: (val) => val.length < 6
@@ -326,6 +327,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   TextFormField(
+                    obscureText:true,
                     decoration: InputDecoration(
                         labelText: "Password", hasFloatingPlaceholder: true),
                     controller: passwordInp,
@@ -334,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   Text(
-                    "Password must be at least 8 characters and include a special character and number",
+                    "Password must be at least 6 characters long",
                     style: TextStyle(color: Colors.grey),
                   ),
                   SizedBox(
@@ -402,7 +404,7 @@ class _LoginPageState extends State<LoginPage> {
                             } else {
                               serverResponse = "other error";
                               showAlertDialog(
-                                  context, "Please fill the form", "Alert");
+                                  context, "This email is already taken", "Alert");
                             }
                           });
 

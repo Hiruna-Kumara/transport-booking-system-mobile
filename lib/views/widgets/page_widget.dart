@@ -8,7 +8,7 @@ class UpperHalf extends StatelessWidget {
     return Container(
       height: screenHeight / 2,
       child: Image.asset(
-        'assets/bus3.jpg',
+        'assets/road9.jpg',
         fit: BoxFit.cover,
       ),
     );
@@ -42,17 +42,20 @@ class PageTitle extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // IconData(0xf36d, fontFamily: iconFont, fontPackage: iconFontPackage),
-
-          Icon(
-            Icons.airline_seat_recline_normal,
-            size: 48,
-            color: Colors.white,
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Image(image: AssetImage('assets/logo.png')),
           ),
-          Text(
-            "Bus Booking",
-            style: TextStyle(
-                fontSize: 34, color: Colors.white, fontWeight: FontWeight.w400),
-          )
+          // Icon(
+          //   Icons.airline_seat_recline_normal,
+          //   size: 48,
+          //   color: Colors.white,
+          // ),
+          // Text(
+          //   "Bus Booking",
+          //   style: TextStyle(
+          //       fontSize: 34, color: Colors.white, fontWeight: FontWeight.w400),
+          // )
         ],
       ),
     );
@@ -91,17 +94,21 @@ class PageTitleHomePage extends StatelessWidget {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Icon(
-            Icons.airline_seat_recline_normal,
-            color: Colors.white,
+          // Icon(
+          //   Icons.airline_seat_recline_normal,
+          //   color: Colors.white,
+          // ),
+          // Text(
+          //   "Bus Booking",
+          //   style: TextStyle(
+          //       color: Colors.white, fontWeight: FontWeight.w400),
+          // )
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Image(image: AssetImage('assets/logo.png')),
           ),
-          Text(
-            "Bus Booking",
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.w400),
-          )
         ],
       ),
     );
