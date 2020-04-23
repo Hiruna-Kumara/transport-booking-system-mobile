@@ -3,14 +3,17 @@ import 'package:http/http.dart';
 import '../widgets/page_widget.dart';
 import '../../models/newUser.dart';
 import 'package:flutter/material.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/authController.dart';
+import '../pages/shared.dart';
+import '../pages/home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-enum AuthMode { LOGIN, SIGNUP ,PassengerUI}
+enum AuthMode { LOGIN, SIGNUP, PassengerUI }
 
 class _LoginPageState extends State<LoginPage> {
   // To adjust the layout according to the screen size
@@ -26,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<Response> responseNew;
   String email = '';
   String password = '';
+  Shared sharedPreference;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                         // )
                         FlatButton(
                           child: Text("Login"),
-                          color: Color(0xFF4B9DFE),
+                          // color: Color(0xFF4B9DFE),
+                          color: Colors.green[900],
                           textColor: Colors.white,
                           padding: EdgeInsets.only(
                               left: 38, right: 38, top: 15, bottom: 15),
@@ -151,13 +156,27 @@ class _LoginPageState extends State<LoginPage> {
                                   .then((value) {
                                 serverResponse =
                                     authController.getResponseSignIn();
+                                // Future<SharedPreferences> sharedPreferences =
+                                //     SharedPreferences.getInstance();
+                                print("done 1");
                                 print(serverResponse + "signIn");
                                 if (serverResponse == "Sign in success") {
                                   setState(() {
-                                _authMode = AuthMode.PassengerUI;
-                              });
+                                    sharedPreference=new Shared(authController.getToken(),authController.getUID());
+                                    // sharedPreferences.setString(
+                                    //     "token",
+                                    //     authController.getToken());  // cache user data
+                                    // sharedPreferences.setString(
+                                    //     "uid", authController.getUID());
+
+                                    // _authMode = AuthMode.PassengerUI;
+                                  });
                                   showAlertDialog(
                                       context, "You are logged in", "success");
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => Home()));
+
                                   // clearTextBoxes();
                                   // setState(() {
                                   //   _authMode = AuthMode.LOGIN;

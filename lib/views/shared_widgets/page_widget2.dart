@@ -20,8 +20,6 @@ class LowerHalf extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
-    print("lowerHalf");
-
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -32,7 +30,7 @@ class LowerHalf extends StatelessWidget {
   }
 }
 
-class PageTitle extends StatelessWidget {
+class PageTitleSignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,8 +39,6 @@ class PageTitle extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // IconData(0xf36d, fontFamily: iconFont, fontPackage: iconFontPackage),
-
           Icon(
             Icons.airline_seat_recline_normal,
             size: 48,
@@ -59,32 +55,6 @@ class PageTitle extends StatelessWidget {
   }
 }
 
-// class ErrorAlert  {
-//   @override
-//   Widget build(BuildContext context) {
-//     // set up the button
-//     Widget okButton = FlatButton(
-//       child: Text("OK"),
-//       onPressed: () {},
-//     );
-
-//     // set up the AlertDialog
-//     AlertDialog alert = AlertDialog(
-//       title: Text("My title"),
-//       content: Text("This is my message."),
-//       actions: [
-//         okButton,
-//       ],
-//     );
-
-//     // show the dialog
-//     return showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return alert;
-//       },
-//     );
-//   }
 class PageTitleHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
